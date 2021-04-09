@@ -8,6 +8,7 @@ import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -16,7 +17,16 @@ public class MainActivity extends AppCompatActivity {
 
     Button buttonStart, buttonStop;
     TextView textView;
+    EditText editTextMin, editTextSec;
     Boolean isStopped;
+
+
+    public void protectValue(EditText editText, int valueOfTiemr) {
+        String contentofEditTextSec = String.valueOf(editText.getText());
+        if (Integer.valueOf(contentofEditTextSec) > valueOfTiemr ) {
+            editText.setText(String.valueOf(valueOfTiemr));
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +36,17 @@ public class MainActivity extends AppCompatActivity {
         buttonStop = (Button) findViewById(R.id.buttonStop);
 
         textView = (TextView) findViewById(R.id.textViewTimer);
+        editTextSec = (EditText) findViewById(R.id.editTextSec);
+        editTextMin = (EditText) findViewById(R.id.editTextMin);
+
         buttonStart.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v) {
+
+                protectValue(editTextSec, 60);
+                protectValue(editTextMin, 99);
+
                 isStopped = false;
                 String currentTimer = String.valueOf(textView.getText());
                 counter = Integer.valueOf(currentTimer);
