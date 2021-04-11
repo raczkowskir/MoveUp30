@@ -15,10 +15,10 @@ public class MainActivity extends AppCompatActivity {
     public int counter = 100;
     public int counterStartValue = 100;
 
-    Button buttonStart, buttonStop;
+    Button buttonStart, buttonStop, buttonClear;
     TextView textView;
     EditText editTextMin, editTextSec;
-    Boolean isStopped;
+    Boolean isStopped, isCleared;
     boolean isFirstStart = true;
 
     public void protectValue(EditText editText, int valueOfTiemr) {
@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void manageTimer(TextView aTextView) {
         isStopped = false;
+        isCleared = false;
 
         String currentTimer = String.valueOf(textView.getText());
         counter = Integer.parseInt(currentTimer);
@@ -63,8 +64,13 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     this.cancel();
-                    counter = Integer.parseInt(String.valueOf(aTextView.getText()));
-                    Log.d("counter", String.valueOf(counter));
+                    if (!isCleared) {
+                        counter = Integer.parseInt(String.valueOf(aTextView.getText()));
+                        Log.d("counter", String.valueOf(counter));
+                    } else {
+                        counter = Integer.parseInt(String.valueOf(0));
+                        Log.d("Raki", "Cleared");
+                    }
                 }
             }
             public  void onFinish(){
@@ -84,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         buttonStart = findViewById(R.id.buttonStart);
         buttonStop = findViewById(R.id.buttonStop);
+        buttonClear = findViewById(R.id.buttonClear);
 
         textView = findViewById(R.id.textViewTimer);
         editTextSec = findViewById(R.id.editTextSec);
@@ -98,5 +105,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
         buttonStop.setOnClickListener(v -> isStopped = true);
+
+        buttonClear.setOnClickListener(v -> {
+            isFirstStart = true;
+            protectValue(editTextSec, 60);
+            protectValue(editTextMin, 99);
+            getTimer(editTextMin, editTextSec, textView);
+            isStopped = true;
+            isCleared = true;
+        });
     }
 }
