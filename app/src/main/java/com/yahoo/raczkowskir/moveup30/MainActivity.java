@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
     public int counter = 100;
+    public int preTimerCounter = 3;
     public int counterStartValue = 100;
 
     Button buttonStart, buttonStop, buttonClear;
@@ -20,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     EditText editTextMin, editTextSec;
     Boolean isStopped, isCleared;
     boolean isFirstStart = true;
+    public ChainedCountDownTimer timer1;
+    public ChainedCountDownTimer timer2;
 
     public void protectValue(EditText editText, int valueOfTiemr) {
         String contentofEditTextSec = String.valueOf(editText.getText());
@@ -49,6 +52,20 @@ public class MainActivity extends AppCompatActivity {
         return fullTimer;
     }
 
+    public Boolean startPreTimer(TextView aTextView) {
+        timer1 = new ChainedCountDownTimer((5000), 1000){
+            public void onTick(long millisUntilFinished){
+                aTextView.setText(String.valueOf(preTimerCounter));
+                preTimerCounter--;
+            }
+            public  void onFinish(){
+                preTimerCounter = 3;
+
+            }
+        };
+        return true;
+    }
+
     public void manageTimer(TextView aTextView) {
         isStopped = false;
         isCleared = false;
@@ -56,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         String currentTimer = String.valueOf(textView.getText());
         counter = Integer.parseInt(currentTimer);
 
-        new CountDownTimer((counter*100), 100){
+        timer2 = new ChainedCountDownTimer((counter*100), 100){
             public void onTick(long millisUntilFinished){
                 if (!isStopped) {
                     counter--;
@@ -81,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("Raki", "timerCanceled");
                 }
             }
-        }.start();
+        };
     }
 
     @Override
@@ -97,11 +114,12 @@ public class MainActivity extends AppCompatActivity {
         editTextMin = findViewById(R.id.editTextMin);
 
         buttonStart.setOnClickListener(v -> {
-
+            startPreTimer(textView);
             protectValue(editTextSec, 60);
             protectValue(editTextMin, 99);
             getTimer(editTextMin, editTextSec, textView);
             manageTimer(textView);
+            timer1.setNext(timer2).start();
         });
 
         buttonStop.setOnClickListener(v -> isStopped = true);
