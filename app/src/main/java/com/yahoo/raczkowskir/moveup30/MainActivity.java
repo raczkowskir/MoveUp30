@@ -1,8 +1,12 @@
+
 package com.yahoo.raczkowskir.moveup30;
 
 // MOV-7 epic - starting work !
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -23,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     boolean isFirstStart = true;
     public ChainedCountDownTimer timer1;
     public ChainedCountDownTimer timer2;
+    ConstraintLayout constraintLayout;
 
     public void protectValue(EditText editText, int valueOfTiemr) {
         String contentofEditTextSec = String.valueOf(editText.getText());
@@ -30,9 +35,11 @@ public class MainActivity extends AppCompatActivity {
                 || Integer.parseInt(contentofEditTextSec) > valueOfTiemr ) {
             editText.setText(String.valueOf(valueOfTiemr));
         }
+        Log.d("Raki_3", String.valueOf("protectValue"));
     }
 
     public int getTimer(EditText aEditTextMin, EditText aEditTextSec, TextView aTextView) {
+        Log.d("Raki_4", String.valueOf("getTimer"));
         int editTextMin = Integer.parseInt(String.valueOf(aEditTextMin.getText()));
         int editTextSec = Integer.parseInt(String.valueOf(aEditTextSec.getText()));
         int fullTimer = (editTextMin*60) + editTextSec;
@@ -53,20 +60,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public Boolean startPreTimer(TextView aTextView) {
-        timer1 = new ChainedCountDownTimer((5000), 1000){
+        timer1 = new ChainedCountDownTimer((4000), 1000){
+
             public void onTick(long millisUntilFinished){
                 aTextView.setText(String.valueOf(preTimerCounter));
                 preTimerCounter--;
+                Log.d("Raki_1", String.valueOf(preTimerCounter));
             }
             public  void onFinish(){
+                constraintLayout.setBackgroundColor(Color.rgb(76, 175, 80));
+                Log.d("Raki_2", String.valueOf(preTimerCounter));
+                aTextView.setText(String.valueOf(0));
                 preTimerCounter = 3;
-
             }
         };
         return true;
     }
 
     public void manageTimer(TextView aTextView) {
+        Log.d("Raki_5", String.valueOf("manageTimer"));
         isStopped = false;
         isCleared = false;
 
@@ -75,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
         timer2 = new ChainedCountDownTimer((counter*100), 100){
             public void onTick(long millisUntilFinished){
+                Log.d("Raki_7", String.valueOf(counter));
                 if (!isStopped) {
                     counter--;
                     aTextView.setText(String.valueOf(counter));
@@ -93,8 +106,10 @@ public class MainActivity extends AppCompatActivity {
             public  void onFinish(){
                 if (!isStopped) {
                     aTextView.setText(String.valueOf(counterStartValue));
+                    constraintLayout.setBackgroundColor(Color.rgb(255, 255, 255));
                 }
                 else {
+                    constraintLayout.setBackgroundColor(Color.rgb(255, 255, 255));
                     Log.d("Raki", "timerCanceled");
                 }
             }
@@ -105,6 +120,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        constraintLayout = findViewById(R.id.viewId);
+
         buttonStart = findViewById(R.id.buttonStart);
         buttonStop = findViewById(R.id.buttonStop);
         buttonClear = findViewById(R.id.buttonClear);
@@ -119,12 +137,15 @@ public class MainActivity extends AppCompatActivity {
             protectValue(editTextMin, 99);
             getTimer(editTextMin, editTextSec, textView);
             manageTimer(textView);
+            Log.d("Raki_6", String.valueOf("onCreate"));
+            constraintLayout.setBackgroundColor(Color.rgb(202, 32, 32));
             timer1.setNext(timer2).start();
         });
 
         buttonStop.setOnClickListener(v -> isStopped = true);
 
         buttonClear.setOnClickListener(v -> {
+            constraintLayout.setBackgroundColor(Color.rgb(255, 255, 255));
             isFirstStart = true;
             protectValue(editTextSec, 60);
             protectValue(editTextMin, 99);
