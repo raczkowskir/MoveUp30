@@ -6,7 +6,9 @@ package com.yahoo.raczkowskir.moveup30;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -28,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     public ChainedCountDownTimer timer1;
     public ChainedCountDownTimer timer2;
     ConstraintLayout constraintLayout;
+    MediaPlayer mp;
+    Context context = this;
 
     public void protectValue(EditText editText, int valueOfTiemr) {
         String contentofEditTextSec = String.valueOf(editText.getText());
@@ -130,8 +134,19 @@ public class MainActivity extends AppCompatActivity {
         textView = findViewById(R.id.textViewTimer);
         editTextSec = findViewById(R.id.editTextSec);
         editTextMin = findViewById(R.id.editTextMin);
+        mp = MediaPlayer.create(context, R.raw.sound);
 
         buttonStart.setOnClickListener(v -> {
+
+            try {
+                if (mp.isPlaying()) {
+                    mp.stop();
+                    mp.release();
+                    mp = MediaPlayer.create(context, R.raw.sound);
+                } mp.start();
+            } catch(Exception e) { e.printStackTrace();
+            }
+
             startPreTimer(textView);
             protectValue(editTextSec, 60);
             protectValue(editTextMin, 99);
