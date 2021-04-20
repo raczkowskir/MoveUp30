@@ -1,8 +1,6 @@
 
 package com.yahoo.raczkowskir.moveup30;
 
-// MOV-7 epic - starting work !
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -30,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     public ChainedCountDownTimer timer1;
     public ChainedCountDownTimer timer2;
     ConstraintLayout constraintLayout;
-    MediaPlayer mp;
+    MediaPlayer mp, mp_finish;
     Context context = this;
 
     public void protectValue(EditText editText, int valueOfTiemr) {
@@ -67,11 +65,31 @@ public class MainActivity extends AppCompatActivity {
         timer1 = new ChainedCountDownTimer((4000), 1000){
 
             public void onTick(long millisUntilFinished){
+                try {
+                    if (mp.isPlaying()) {
+                        mp.stop();
+                        mp.release();
+                        mp = MediaPlayer.create(context, R.raw.alarm_clock);
+                    } mp.start();
+                } catch(Exception e) { e.printStackTrace();
+                }
+
                 aTextView.setText(String.valueOf(preTimerCounter));
                 preTimerCounter--;
                 Log.d("Raki_1", String.valueOf(preTimerCounter));
             }
             public  void onFinish(){
+                //alarm_clock_finish
+
+                try {
+                    if (mp_finish.isPlaying()) {
+                        mp_finish.stop();
+                        mp_finish.release();
+                        mp_finish = MediaPlayer.create(context, R.raw.alarm_clock_finish);
+                    } mp_finish.start();
+                } catch(Exception e) { e.printStackTrace();
+                }
+
                 constraintLayout.setBackgroundColor(Color.rgb(76, 175, 80));
                 Log.d("Raki_2", String.valueOf(preTimerCounter));
                 aTextView.setText(String.valueOf(0));
@@ -134,19 +152,10 @@ public class MainActivity extends AppCompatActivity {
         textView = findViewById(R.id.textViewTimer);
         editTextSec = findViewById(R.id.editTextSec);
         editTextMin = findViewById(R.id.editTextMin);
-        mp = MediaPlayer.create(context, R.raw.sound);
+        mp = MediaPlayer.create(context, R.raw.alarm_clock);
+        mp_finish = MediaPlayer.create(context, R.raw.alarm_clock_finish);
 
         buttonStart.setOnClickListener(v -> {
-
-            try {
-                if (mp.isPlaying()) {
-                    mp.stop();
-                    mp.release();
-                    mp = MediaPlayer.create(context, R.raw.sound);
-                } mp.start();
-            } catch(Exception e) { e.printStackTrace();
-            }
-
             startPreTimer(textView);
             protectValue(editTextSec, 60);
             protectValue(editTextMin, 99);
