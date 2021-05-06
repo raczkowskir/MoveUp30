@@ -5,14 +5,25 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 
 public class TimerUtilities {
-    Boolean mIsStopped, mIsCleared;
+    private Boolean mIsCleared, mIsStopped;
     private int mCounter = 100;
     private int mPreTimerCounter = 3;
     private int mCounterStartValue = 100;
     private boolean mIsFirstStart = true;
     private ChainedCountDownTimer mTimer1, mTimer2;
     private final Context mContext;
+
+    public MainActivity getmMainActivity() {
+        return mMainActivity;
+    }
+
     private final MainActivity mMainActivity;
+
+    void setMIsStopped(Boolean mIsStopped) {
+        this.mIsStopped = mIsStopped;
+    }
+
+    Boolean getIsStopped() { return mIsStopped; }
 
     TimerUtilities(
         Context aContext,
@@ -30,7 +41,7 @@ public class TimerUtilities {
         }
     }
 
-    private int getTimer() {
+    int getTimer() {
         int editTextMin = Integer.parseInt(String.valueOf(mMainActivity.mEditTextMin.getText()));
         int editTextSec = Integer.parseInt(String.valueOf(mMainActivity.mEditTextSec.getText()));
         int fullTimer = (editTextMin * 60) + editTextSec;

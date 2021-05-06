@@ -10,12 +10,18 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import static com.yahoo.raczkowskir.moveup30.R.*;
-import static com.yahoo.raczkowskir.moveup30.R.id.*;
+import static com.yahoo.raczkowskir.moveup30.R.id.buttonClear;
+import static com.yahoo.raczkowskir.moveup30.R.id.buttonStart;
+import static com.yahoo.raczkowskir.moveup30.R.id.buttonStop;
+import static com.yahoo.raczkowskir.moveup30.R.id.editTextMin;
+import static com.yahoo.raczkowskir.moveup30.R.id.editTextSec;
+import static com.yahoo.raczkowskir.moveup30.R.id.textViewTimer;
+import static com.yahoo.raczkowskir.moveup30.R.id.viewId;
+import static com.yahoo.raczkowskir.moveup30.R.raw;
 
 public class MainActivity extends AppCompatActivity {
-    private final MainActivity mMainActivity;
-    private final Context mContext;
+    /*private final */MainActivity mMainActivity;
+    /*private final */Context mContext;
     TextView mTextView;
     EditText mEditTextMin, mEditTextSec;
     ConstraintLayout mConstraintLayout;
@@ -32,18 +38,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mConstraintLayout = findViewById(viewId);
+        initializeFieldsForTimerUtilities();
+
         Button startButton = findViewById(buttonStart);
         Button stopButton = findViewById(buttonStop);
         Button ClearButton = findViewById(buttonClear);
+        mTimerUtilities = new TimerUtilities(mContext, mMainActivity);
+
+        startButton.setOnClickListener(v -> mTimerUtilities.handelButtonStart());
+        stopButton.setOnClickListener(v -> mTimerUtilities.setMIsStopped(true));
+        ClearButton.setOnClickListener(v -> mTimerUtilities.handelButtonClear());
+
+    }
+
+    private void initializeFieldsForTimerUtilities() {
+        mConstraintLayout = findViewById(viewId);
         mTextView = findViewById(textViewTimer);
         mEditTextSec = findViewById(editTextSec);
         mEditTextMin = findViewById(editTextMin);
         mMp = MediaPlayer.create(mContext, raw.alarm_clock);
-        mTimerUtilities = new TimerUtilities(mContext, mMainActivity);
-
-        startButton.setOnClickListener(v -> mTimerUtilities.handelButtonStart());
-        stopButton.setOnClickListener(v -> mTimerUtilities.mIsStopped = true);
-        ClearButton.setOnClickListener(v -> mTimerUtilities.handelButtonClear());
     }
 }
